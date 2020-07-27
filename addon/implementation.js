@@ -91,7 +91,21 @@ var TBKeys = {
         window.Mousetrap.reset()
         for (let key of Object.keys(this.keys)) {
             window.Mousetrap.bind(key, function() {
-                eval(TBKeys.keys[key])  // eslint-disable-line no-eval
+                let command = TBKeys.keys[key]
+                let cmdType = command.split(":", 1)
+                switch (cmdType) {
+                    case "cmd":
+                        window.goDoCommand(command.slice("cmd:".length))
+                        break
+                    case "func":
+                        window[command.slice("func:".length)]()
+                        break
+                    case "unset":
+                        break
+                    default:
+                        eval(command)  // eslint-disable-line no-eval
+                        break
+                }
                 return false
             })
         }
